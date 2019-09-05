@@ -17,12 +17,17 @@ module AwesomePrint
       console? && boolean(defined?(Rails::Console) || ENV['RAILS_ENV'])
     end
 
-    def diet_rb
+    def diet_rb(options)
       IRB.formatter = Class.new(IRB::Formatter) do
-        def inspect_object(object)
-          object.ai
+        def initialize(options)
+          super()
+          @options = options
         end
-      end.new
+
+        def inspect_object(object)
+          object.ai(@options)
+        end
+      end.new options
     end
 
     def usual_rb
@@ -35,10 +40,10 @@ module AwesomePrint
       end
     end
 
-    def irb!
+    def irb!(options={})
       return unless defined?(IRB)
 
-      IRB.version.include?('DietRB') ? diet_rb : usual_rb
+      IRB.version.include?('DietRB') ? diet_rb(options) : usual_rb
     end
 
     def pry!(options={})
