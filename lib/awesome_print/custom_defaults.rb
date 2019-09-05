@@ -41,8 +41,8 @@ module AwesomePrint
       IRB.version.include?('DietRB') ? diet_rb : usual_rb
     end
 
-    def pry!
-      Pry.print = proc { |output, value| output.puts value.ai } if defined?(Pry)
+    def pry!(options={})
+      Pry.print = proc { |output, value| output.puts value.ai(options) } if defined?(Pry)
     end
 
     private
